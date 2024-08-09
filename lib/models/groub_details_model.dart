@@ -1,38 +1,18 @@
-class GroupDetailsModel {
-  final int status;
-  final String message;
-  final DataModel dataModel;
-
-  GroupDetailsModel({
-    required this.status,
-    required this.message,
-    required this.dataModel,
-  });
-
-  factory GroupDetailsModel.fromJson(Map<String, dynamic> json) {
-    return GroupDetailsModel(
-      status: json['status'],
-      message: json['message'],
-      dataModel: DataModel.fromJson(json['data']),
-    );
-  }
-}
-
-class DataModel {
-  final int id;
-  final String name;
+class GetGroubIdModel {
+  final int groupId;
+  final String groupName;
   final int supervisorId;
 
-  DataModel({
-    required this.id,
-    required this.name,
+  GetGroubIdModel({
+    required this.groupId,
+    required this.groupName,
     required this.supervisorId,
   });
 
-  factory DataModel.fromJson(Map<String, dynamic> json) {
-    return DataModel(
-      id: json['id'],
-      name: json['name'],
+  factory GetGroubIdModel.fromJson(Map<String, dynamic> json) {
+    return GetGroubIdModel(
+      groupId: json['group_id'],
+      groupName: json['group_name'],
       supervisorId: json['supervisor_id'],
     );
   }

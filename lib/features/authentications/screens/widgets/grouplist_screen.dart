@@ -4,8 +4,12 @@ import 'package:project_2tamayoz/features/authentications/screens/widgets/report
 import 'package:project_2tamayoz/features/authentications/screens/widgets/search_page.dart';
 import 'package:project_2tamayoz/features/authentications/screens/widgets/viewReportPage.dart';
 import 'package:project_2tamayoz/main.dart';
+import 'package:project_2tamayoz/models/groub_details_model.dart';
 import 'package:project_2tamayoz/models/user_model.dart';
+import 'package:project_2tamayoz/services/all_groubs_service.dart';
+import 'package:project_2tamayoz/services/all_volunteers_service.dart';
 import 'package:project_2tamayoz/services/delete_volunteer_from_groub_service.dart';
+import 'package:project_2tamayoz/services/groub_details_service.dart';
 import 'package:project_2tamayoz/services/volunteer_under_supervisor_service.dart';
 import '../../modules/group_with_members.dart';
 import 'leaderprofilepage.dart';
@@ -104,26 +108,28 @@ class _GroupListScreenState extends State<GroupListScreen> {
               ),
               title: Center(
                 child: const Text(
-                  'Groups',
+                  'My Group',
                   style: TextStyle(fontSize: 25, color: Colors.white),
                 ),
               ),
               actions: [
                 Center(
                     child: Icon(Icons.groups, size: 38, color: Colors.white)),
-                // IconButton(
-                //   onPressed: () {
-                //     sharedPreferences!.clear();
-                //     print(
-                //       sharedPreferences!.getString("access_token"),
-                //     );
-                //   },
-                //   icon: const Icon(Icons.heart_broken),
-                // ),
-                // IconButton(
-                //   onPressed: () {},
-                //   icon: const Icon(Icons.local_convenience_store),
-                // ),
+                IconButton(
+                  onPressed: () {
+                    sharedPreferences!.clear();
+                    print(
+                      sharedPreferences!.getString("access_token"),
+                    );
+                  },
+                  icon: const Icon(Icons.heart_broken),
+                ),
+                IconButton(
+                  onPressed: () async {
+                    await AllGroubsService().allGroubs(userId: 3);
+                  },
+                  icon: const Icon(Icons.local_convenience_store),
+                ),
               ],
             )
           : null,
@@ -156,57 +162,87 @@ class GroupListContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      itemCount: groupsList.length,
-      separatorBuilder: (context, index) => Divider(),
-      itemBuilder: (context, index) {
-        final group = groupsList[index];
-        return InkWell(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ActivityListScreen(group: group),
-              ),
-            );
-          },
-          child: Card(
-            margin: const EdgeInsets.all(8.0),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        group.name,
-                        style: TextStyle(fontSize: 18, color: Colors.black),
-                      ),
-                      Text(
-                        'Supervisor: ${group.supervisor}',
-                        style:
-                            TextStyle(fontSize: 14, color: Color(0xff36D6E7)),
-                      ),
-                    ],
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.add, color: Color(0xffFEB06A), size: 30),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MembersPage(group: group),
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
+    return FutureBuilder<GetGroubIdModel>(
+      future: GetGroubIdService().groubDetails(
+        userId: sharedPreferences!.getInt("id")!,
+      ),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text(
+              snapshot.error.toString(),
             ),
-          ),
-        );
+          );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text(
+              'No Groub for this supervisor.',
+              style: const TextStyle(),
+            ),
+          );
+        } else {
+          GetGroubIdModel groub = snapshot.data!;
+          return ListView(
+            children: [
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ActivityListScreen(
+                        group: groub,
+                      ),
+                    ),
+                  );
+                },
+                child: Card(
+                  margin: const EdgeInsets.all(8.0),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              groub.groupName,
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.black),
+                            ),
+                            Text(
+                              'Supervisor: ${sharedPreferences!.getString("first_name")} ${sharedPreferences!.getString("last_name")}',
+                              style: TextStyle(
+                                  fontSize: 14, color: Color(0xff36D6E7)),
+                            ),
+                          ],
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.add,
+                              color: Color(0xffFEB06A), size: 30),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) {
+                                return MembersPage(
+                                  getGroubIdModel: groub,
+                                );
+                              }),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        }
       },
     );
   }

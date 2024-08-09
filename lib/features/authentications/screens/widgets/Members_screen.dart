@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 /*
 
 import 'package:flutter/cupertino.dart';
@@ -198,18 +200,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:project_2tamayoz/main.dart';
+import 'package:project_2tamayoz/models/groub_details_model.dart';
 import 'package:project_2tamayoz/models/volunteer_under_supervisor_model.dart';
 import 'package:project_2tamayoz/services/delete_volunteer_from_groub_service.dart';
 import 'package:project_2tamayoz/services/volunteer_under_supervisor_service.dart';
 
-import '../../modules/group_with_members.dart';
-
 import 'members_activity_page.dart'; // استيراد صفحة النشاط الجديدة
 
 class MembersPage extends StatefulWidget {
-  final GroupWithMembers group;
+  GetGroubIdModel getGroubIdModel;
 
-  const MembersPage({Key? key, required this.group}) : super(key: key);
+  MembersPage({super.key, required this.getGroubIdModel});
 
   @override
   _MembersPageState createState() => _MembersPageState();
@@ -217,7 +218,7 @@ class MembersPage extends StatefulWidget {
 
 class _MembersPageState extends State<MembersPage> {
   final TextEditingController _controller = TextEditingController();
-  int _selectedIndex = 0;
+  // int _selectedIndex = 0;
   bool isLoading = false;
 
   void loadingIndecatorFalse() {
@@ -234,7 +235,7 @@ class _MembersPageState extends State<MembersPage> {
     String memberName = _controller.text.trim();
     if (memberName.isNotEmpty) {
       setState(() {
-        widget.group.addMember(memberName);
+        // widget.group.addMember(memberName);
       });
       _controller.clear();
     } else {
@@ -248,7 +249,7 @@ class _MembersPageState extends State<MembersPage> {
 
   void _deleteMember(int index) {
     setState(() {
-      widget.group.removeMember(index);
+      // widget.group.removeMember(index);
     });
   }
 
@@ -269,7 +270,7 @@ class _MembersPageState extends State<MembersPage> {
         backgroundColor: Color(0xffE4C9E5),
         title: Center(
           child: Text(
-            'Add Member to ${widget.group.name}',
+            'Add Member to ${widget.getGroubIdModel.groupName}',
             style: TextStyle(fontSize: 20, color: Colors.white),
           ),
         ),
@@ -357,7 +358,7 @@ class _MembersPageState extends State<MembersPage> {
                                     try {
                                       await DeleteVolunteerFromGroubService()
                                           .deleteVolunteerFromGroub(
-                                        id: volunteer.id,
+                                        id: volunteer.userId,
                                       );
                                       print('Success');
                                       loadingIndecatorFalse();
