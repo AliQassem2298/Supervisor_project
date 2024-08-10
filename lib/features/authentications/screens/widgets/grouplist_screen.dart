@@ -6,7 +6,7 @@ import 'package:project_2tamayoz/main.dart';
 import 'package:project_2tamayoz/models/groub_details_model.dart';
 import 'package:project_2tamayoz/services/all_groubs_service.dart';
 import 'package:project_2tamayoz/services/all_volunteers_service.dart';
-import 'package:project_2tamayoz/services/groub_details_service.dart';
+import 'package:project_2tamayoz/services/get_groub_id_service.dart';
 import 'leaderprofilepage.dart';
 import 'members_screen.dart';
 import 'activity_list_screen.dart';

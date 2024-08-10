@@ -34,7 +34,7 @@ class ActivityListScreen extends StatelessWidget {
                 style: TextStyle(color: Color(0xff36D6E7)),
               ),
               trailing: Text(
-                'this fuching shit is the date .... ',
+                '10/8/2024',
                 style: TextStyle(color: Color(0xffFEB06A)),
               ),
             ),
