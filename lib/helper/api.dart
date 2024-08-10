@@ -22,9 +22,9 @@ class Api {
     print('url= $url ,headrs=$headers');
     if (response.statusCode == 200) {
       dynamic data = jsonDecode(response.body);
-      print('url= $url ,headrs=$headers');
+      // print('url= $url ,headrs=$headers');
 
-      print(data);
+      // print(data);
       return data;
     } else if (response.statusCode == 404) {
       // return []; ////in my project ...
@@ -65,8 +65,10 @@ class Api {
       return data;
     } else {
       Map<String, dynamic> data = jsonDecode(response.body);
-      var detail = data['detail'];
-      throw detail;
+      var message = data['message'];
+      print(message);
+
+      throw message;
       // throw Exception(detail);
     }
   }

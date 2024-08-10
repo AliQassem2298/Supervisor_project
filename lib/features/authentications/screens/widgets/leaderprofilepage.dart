@@ -1,13 +1,14 @@
+// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously, unused_element
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:project_2tamayoz/main.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SupervisorProfilePage extends StatefulWidget {
   final String supervisor;
 
-  SupervisorProfilePage({required this.supervisor});
+  const SupervisorProfilePage({super.key, required this.supervisor});
 
   @override
   _SupervisorProfilePageState createState() => _SupervisorProfilePageState();
@@ -72,7 +73,7 @@ class _SupervisorProfilePageState extends State<SupervisorProfilePage> {
     if (_imageFile != null) {
       await sharedPreferences!.setString('imagePath', _imageFile!.path);
     }
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
       content: Text('Profile Saved'),
     ));
   }
@@ -80,7 +81,7 @@ class _SupervisorProfilePageState extends State<SupervisorProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xfff8f5fa),
+      backgroundColor: const Color(0xfff8f5fa),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Color(0xffE4C9E5),

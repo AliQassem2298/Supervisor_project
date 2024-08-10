@@ -1,17 +1,12 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:project_2tamayoz/features/authentications/screens/widgets/report_page.dart';
 import 'package:project_2tamayoz/features/authentications/screens/widgets/search_page.dart';
 import 'package:project_2tamayoz/features/authentications/screens/widgets/viewReportPage.dart';
 import 'package:project_2tamayoz/main.dart';
 import 'package:project_2tamayoz/models/groub_details_model.dart';
-import 'package:project_2tamayoz/models/user_model.dart';
 import 'package:project_2tamayoz/services/all_groubs_service.dart';
 import 'package:project_2tamayoz/services/all_volunteers_service.dart';
-import 'package:project_2tamayoz/services/delete_volunteer_from_groub_service.dart';
 import 'package:project_2tamayoz/services/groub_details_service.dart';
-import 'package:project_2tamayoz/services/volunteer_under_supervisor_service.dart';
-import '../../modules/group_with_members.dart';
 import 'leaderprofilepage.dart';
 import 'members_screen.dart';
 import 'activity_list_screen.dart';
@@ -126,7 +121,9 @@ class _GroupListScreenState extends State<GroupListScreen> {
                 ),
                 IconButton(
                   onPressed: () async {
-                    await AllGroubsService().allGroubs(userId: 3);
+                    await AllVolunteersService().allVolunteers(
+                      userId: sharedPreferences!.getInt("id")!,
+                    );
                   },
                   icon: const Icon(Icons.local_convenience_store),
                 ),

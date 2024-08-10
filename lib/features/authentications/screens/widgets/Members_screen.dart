@@ -202,13 +202,15 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:project_2tamayoz/main.dart';
 import 'package:project_2tamayoz/models/groub_details_model.dart';
 import 'package:project_2tamayoz/models/volunteer_under_supervisor_model.dart';
+import 'package:project_2tamayoz/services/add_volunteer_in_groub_service.dart';
 import 'package:project_2tamayoz/services/delete_volunteer_from_groub_service.dart';
 import 'package:project_2tamayoz/services/volunteer_under_supervisor_service.dart';
+import 'package:project_2tamayoz/services/all_volunteers_service.dart';
 
-import 'members_activity_page.dart'; // استيراد صفحة النشاط الجديدة
+import 'members_activity_page.dart';
 
 class MembersPage extends StatefulWidget {
-  GetGroubIdModel getGroubIdModel;
+  final GetGroubIdModel getGroubIdModel;
 
   MembersPage({super.key, required this.getGroubIdModel});
 
@@ -217,8 +219,6 @@ class MembersPage extends StatefulWidget {
 }
 
 class _MembersPageState extends State<MembersPage> {
-  final TextEditingController _controller = TextEditingController();
-  // int _selectedIndex = 0;
   bool isLoading = false;
 
   void loadingIndecatorFalse() {
@@ -229,28 +229,6 @@ class _MembersPageState extends State<MembersPage> {
   void loadingIndecatorTrue() {
     isLoading = true;
     setState(() {});
-  }
-
-  void _addMember() {
-    String memberName = _controller.text.trim();
-    if (memberName.isNotEmpty) {
-      setState(() {
-        // widget.group.addMember(memberName);
-      });
-      _controller.clear();
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Please enter a member name.'),
-        ),
-      );
-    }
-  }
-
-  void _deleteMember(int index) {
-    setState(() {
-      // widget.group.removeMember(index);
-    });
   }
 
   void _navigateToActivity(Volunteer volunteer) {
@@ -280,28 +258,6 @@ class _MembersPageState extends State<MembersPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              elevation: 4,
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                child: TextField(
-                  controller: _controller,
-                  decoration: InputDecoration(
-                    labelText: 'Member Name',
-                    suffixIcon: IconButton(
-                      icon: Icon(Icons.add, color: Color(0xffFEB06A)),
-                      onPressed: _addMember,
-                    ),
-                    border: InputBorder.none,
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
             Expanded(
               child: FutureBuilder<VolunteerUnderSupervisorModel>(
                 future: VolunteerUnderSupervisorService()
@@ -314,16 +270,12 @@ class _MembersPageState extends State<MembersPage> {
                     );
                   } else if (snapshot.hasError) {
                     return Center(
-                      child: Text(
-                        snapshot.error.toString(),
-                      ),
+                      child: Text(snapshot.error.toString()),
                     );
-                  } else if (snapshot.hasError) {
+                  } else if (!snapshot.hasData ||
+                      snapshot.data!.volunteers.isEmpty) {
                     return const Center(
-                      child: Text(
-                        'No volunteers under this supervisor.',
-                        style: TextStyle(),
-                      ),
+                      child: Text('No volunteers under this supervisor.'),
                     );
                   } else {
                     List<Volunteer> volunteers = snapshot.data!.volunteers;
@@ -342,50 +294,117 @@ class _MembersPageState extends State<MembersPage> {
                             elevation: 4,
                             margin: const EdgeInsets.symmetric(vertical: 8.0),
                             child: ListTile(
-                                title: Text(
-                                  '${volunteer.user.firstName} ${volunteer.user.lastName}',
-                                  style: const TextStyle(
-                                      fontSize: 15, color: Color(0xFF272727)),
-                                ),
-                                trailing: IconButton(
-                                  icon: Icon(Icons.delete,
-                                      color: Colors.red[700]),
-                                  onPressed: () async {
-                                    // _deleteMember(index);
-                                    print('${volunteer.id}');
-                                    loadingIndecatorTrue();
-
-                                    try {
-                                      await DeleteVolunteerFromGroubService()
-                                          .deleteVolunteerFromGroub(
-                                        id: volunteer.userId,
-                                      );
-                                      print('Success');
-                                      loadingIndecatorFalse();
-
-                                      Get.snackbar(
-                                        'Success',
-                                        'Volunteer deleted successfully',
-                                      );
-                                    } catch (e) {
-                                      print(e.toString());
-                                      Get.snackbar(
-                                        'Sorry',
-                                        e.toString(),
-                                        colorText: Colors.white,
-                                      );
-                                    }
+                              title: Text(
+                                '${volunteer.user.firstName} ${volunteer.user.lastName}',
+                                style: const TextStyle(
+                                    fontSize: 15, color: Color(0xFF272727)),
+                              ),
+                              trailing: IconButton(
+                                icon:
+                                    Icon(Icons.delete, color: Colors.red[700]),
+                                onPressed: () async {
+                                  loadingIndecatorTrue();
+                                  try {
+                                    await DeleteVolunteerFromGroubService()
+                                        .deleteVolunteerFromGroub(
+                                      id: volunteer.userId,
+                                    );
+                                    setState(() {
+                                      volunteers.removeAt(index);
+                                    });
+                                    Get.snackbar('Success',
+                                        'Volunteer deleted successfully');
+                                  } catch (e) {
+                                    Get.snackbar('Sorry', e.toString(),
+                                        colorText: Colors.white);
+                                  } finally {
                                     loadingIndecatorFalse();
-                                  },
-                                ),
-                                onTap: () {
-                                  _navigateToActivity(
-                                    volunteers[index],
-                                  );
-                                }),
+                                  }
+                                },
+                              ),
+                              onTap: () => _navigateToActivity(volunteer),
+                            ),
                           );
                         },
                       ),
+                    );
+                  }
+                },
+              ),
+            ),
+            Divider(color: Colors.grey),
+            Center(
+              child: Text(
+                'Add Volunteers To your Group:',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Divider(color: Colors.grey),
+            Expanded(
+              child: FutureBuilder<List<Volunteer>>(
+                future: AllVolunteersService().allVolunteers(
+                  userId: sharedPreferences!.getInt("id")!,
+                ),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text(snapshot.error.toString()));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(
+                        child: Text('No volunteers available.'));
+                  } else {
+                    List<Volunteer> allVolunteers = snapshot.data!;
+                    return ListView.builder(
+                      itemCount: allVolunteers.length,
+                      itemBuilder: (context, index) {
+                        final Volunteer volunteer = allVolunteers[index];
+                        return Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          elevation: 4,
+                          margin: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: ListTile(
+                            title: Text(
+                              '${volunteer.user.firstName} ${volunteer.user.lastName}',
+                              style: const TextStyle(
+                                  fontSize: 15, color: Color(0xFF272727)),
+                            ),
+                            trailing: IconButton(
+                              icon: Icon(Icons.add, color: Color(0xffFEB06A)),
+                              onPressed: () async {
+                                loadingIndecatorTrue();
+                                try {
+                                  await AddVolunteerInGroubService()
+                                      .addVolunteerInGroub(
+                                    userId: volunteer.userId,
+                                    groupId: widget.getGroubIdModel.groupId,
+                                  );
+                                  // DeleteVolunteerFromGroubService()
+                                  //     .deleteVolunteerFromGroub(
+                                  //   id: volunteer.userId,
+                                  // );
+                                  setState(() {});
+                                  Get.snackbar(
+                                    'Success',
+                                    'Volunteer added successfully',
+                                  );
+                                } catch (e) {
+                                  Get.snackbar('Sorry', e.toString(),
+                                      colorText: Colors.white);
+                                } finally {
+                                  loadingIndecatorFalse();
+                                }
+                              },
+                            ),
+                            onTap: () => _navigateToActivity(volunteer),
+                          ),
+                        );
+                      },
                     );
                   }
                 },
