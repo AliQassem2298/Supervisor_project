@@ -1,7 +1,7 @@
 // ignore_for_file: use_super_parameters, must_be_immutable
 
 import 'package:flutter/material.dart';
-import 'package:project_2tamayoz/models/groub_details_model.dart';
+import 'package:project_2tamayoz/models/get_groub_id_model.dart';
 
 class ActivityListScreen extends StatelessWidget {
   GetGroubIdModel group;

@@ -200,7 +200,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:project_2tamayoz/main.dart';
-import 'package:project_2tamayoz/models/groub_details_model.dart';
+import 'package:project_2tamayoz/models/get_groub_id_model.dart';
 import 'package:project_2tamayoz/models/volunteer_under_supervisor_model.dart';
 import 'package:project_2tamayoz/services/add_volunteer_in_groub_service.dart';
 import 'package:project_2tamayoz/services/delete_volunteer_from_groub_service.dart';

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:project_2tamayoz/features/authentications/screens/widgets/search_page.dart';
 import 'package:project_2tamayoz/features/authentications/screens/widgets/viewReportPage.dart';
 import 'package:project_2tamayoz/main.dart';
-import 'package:project_2tamayoz/models/groub_details_model.dart';
+import 'package:project_2tamayoz/models/get_groub_id_model.dart';
 import 'package:project_2tamayoz/services/all_groubs_service.dart';
 import 'package:project_2tamayoz/services/all_volunteers_service.dart';
 import 'package:project_2tamayoz/services/get_groub_id_service.dart';

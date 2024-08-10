@@ -1,6 +1,6 @@
 import 'package:project_2tamayoz/helper/api.dart';
 import 'package:project_2tamayoz/main.dart';
-import 'package:project_2tamayoz/models/groub_details_model.dart';
+import 'package:project_2tamayoz/models/get_groub_id_model.dart';
 
 class GetGroubIdService {
   Future<GetGroubIdModel> groubDetails({
