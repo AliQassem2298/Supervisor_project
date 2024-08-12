@@ -1,10 +1,10 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:project_2tamayoz/features/authentications/screens/widgets/search_page.dart';
-import 'package:project_2tamayoz/features/authentications/screens/widgets/viewReportPage.dart';
+import 'package:project_2tamayoz/features/authentications/screens/widgets/view_books_page.dart';
+import 'package:project_2tamayoz/features/authentications/screens/widgets/view_zady_session_page.dart';
 import 'package:project_2tamayoz/main.dart';
 import 'package:project_2tamayoz/models/get_groub_id_model.dart';
-import 'package:project_2tamayoz/services/all_groubs_service.dart';
 import 'package:project_2tamayoz/services/all_volunteers_service.dart';
 import 'package:project_2tamayoz/services/get_groub_id_service.dart';
 import 'leaderprofilepage.dart';
@@ -70,16 +70,22 @@ class _GroupListScreenState extends State<GroupListScreen> {
                       context,
                       MaterialPageRoute(builder: (context) => SettingsPage()),
                     );
-                  } else if (value == 'View Reports') {
+                  } else if (value == 'book') {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ViewReportPage()),
+                      MaterialPageRoute(builder: (context) => ViewBooksPage()),
+                    );
+                  } else if (value == 'ZADY') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ViewZadySessionPage()),
                     );
                   }
                 },
-                icon: Icon(Icons.menu, size: 30, color: Colors.white),
+                icon: const Icon(Icons.menu, size: 30, color: Colors.white),
                 itemBuilder: (context) => [
-                  PopupMenuItem(
+                  const PopupMenuItem(
                     value: 'Settings',
                     child: Row(
                       children: [
@@ -89,13 +95,23 @@ class _GroupListScreenState extends State<GroupListScreen> {
                       ],
                     ),
                   ),
-                  PopupMenuItem(
-                    value: 'View Reports',
+                  const PopupMenuItem(
+                    value: 'book',
                     child: Row(
                       children: [
-                        Icon(Icons.report, color: Colors.black),
+                        Icon(Icons.bookmark_add_rounded, color: Colors.black),
                         SizedBox(width: 8),
-                        Text('عرض التقارير'),
+                        Text('Books'),
+                      ],
+                    ),
+                  ),
+                  const PopupMenuItem(
+                    value: 'ZADY',
+                    child: Row(
+                      children: [
+                        Icon(Icons.edit_calendar_outlined, color: Colors.black),
+                        SizedBox(width: 8),
+                        Text('Z.A.D.Y'),
                       ],
                     ),
                   ),
