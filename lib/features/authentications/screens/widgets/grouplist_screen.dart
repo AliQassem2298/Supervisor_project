@@ -5,7 +5,9 @@ import 'package:project_2tamayoz/features/authentications/screens/widgets/view_b
 import 'package:project_2tamayoz/features/authentications/screens/widgets/view_zady_session_page.dart';
 import 'package:project_2tamayoz/main.dart';
 import 'package:project_2tamayoz/models/get_groub_id_model.dart';
+import 'package:project_2tamayoz/services/add_zady_session_service.dart';
 import 'package:project_2tamayoz/services/all_volunteers_service.dart';
+import 'package:project_2tamayoz/services/get_books_service.dart';
 import 'package:project_2tamayoz/services/get_groub_id_service.dart';
 import 'leaderprofilepage.dart';
 import 'members_screen.dart';
@@ -136,11 +138,7 @@ class _GroupListScreenState extends State<GroupListScreen> {
                   icon: const Icon(Icons.heart_broken),
                 ),
                 IconButton(
-                  onPressed: () async {
-                    await AllVolunteersService().allVolunteers(
-                      userId: sharedPreferences!.getInt("id")!,
-                    );
-                  },
+                  onPressed: () async {},
                   icon: const Icon(Icons.local_convenience_store),
                 ),
               ],

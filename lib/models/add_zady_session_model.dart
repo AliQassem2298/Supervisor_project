@@ -21,8 +21,8 @@ class AddZadySessionModel {
 class ZadySessionData {
   final int bookId;
   final String sessionDate;
-  final int duration;
-  final int sessionHours;
+  final String duration;
+  final String sessionHours;
   final String updatedAt;
   final String createdAt;
   final int id;

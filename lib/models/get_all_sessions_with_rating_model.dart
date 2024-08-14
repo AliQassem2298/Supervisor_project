@@ -1,23 +1,20 @@
 class GetAllSessionsWithRatingModel {
   final String status;
   final String message;
-  final List<SessionData>? data;
+  final List<SessionData> data;
 
   GetAllSessionsWithRatingModel({
     required this.status,
     required this.message,
-    this.data,
+    required this.data,
   });
 
   factory GetAllSessionsWithRatingModel.fromJson(Map<String, dynamic> json) {
     return GetAllSessionsWithRatingModel(
-      status: json['status'],
-      message: json['message'],
-      data: json['data'] != null
-          ? List<SessionData>.from(
-              json['data'].map((item) => SessionData.fromJson(item)))
-          : null,
-    );
+        status: json['status'],
+        message: json['message'],
+        data: List<SessionData>.from(
+            json['data'].map((item) => SessionData.fromJson(item))));
   }
 }
 

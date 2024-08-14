@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:intl/intl.dart'; // Import intl for date formatting
+import 'package:intl/intl.dart';
+import 'package:project_2tamayoz/services/add_book_service.dart'; // Import intl for date formatting
 
 class AddBookPage extends StatefulWidget {
-  AddBookPage({super.key});
+  final VoidCallback onBookAdded; // Add this line
 
+  AddBookPage({super.key, required this.onBookAdded}); // Modify constructor
   @override
   State<AddBookPage> createState() => _AddBookPageState();
 }
@@ -146,11 +148,19 @@ class _AddBookPageState extends State<AddBookPage> {
                   SizedBox(height: 16),
                   Center(
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formkey.currentState!.validate()) {
                           loadingIndecatorTrue();
 
                           try {
+                            await AddBookService().addBook(
+                              title: bookTitile.text,
+                              author: authorName.text,
+                              date: date.text,
+                              imageName: imagePathController.text,
+                            );
+                            widget.onBookAdded();
+
                             print('Success');
                             loadingIndecatorFalse();
 

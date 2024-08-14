@@ -1,42 +1,14 @@
 import 'package:flutter/material.dart';
-
-class VolunteerRating {
-  final String volunteerName;
-  final int rating;
-  final String comment;
-
-  VolunteerRating({
-    required this.volunteerName,
-    required this.rating,
-    required this.comment,
-  });
-}
+import 'package:project_2tamayoz/models/get_all_sessions_with_rating_model.dart';
 
 class RatingZadyFromVolunteersPage extends StatelessWidget {
-  const RatingZadyFromVolunteersPage({super.key});
-
+  RatingZadyFromVolunteersPage({
+    super.key,
+  });
   @override
   Widget build(BuildContext context) {
-    // Sample data for the list
-    final List<VolunteerRating> ratings = [
-      VolunteerRating(
-        volunteerName: 'John Doe',
-        rating: 4,
-        comment: 'Great session, very informative!',
-      ),
-      VolunteerRating(
-        volunteerName: 'Jane Smith',
-        rating: 5,
-        comment: 'Loved the discussion, looking forward to more!',
-      ),
-      VolunteerRating(
-        volunteerName: 'Alice Johnson',
-        rating: 3,
-        comment: 'It was okay, but could be better.',
-      ),
-      // Add more ratings as needed
-    ];
-
+    List<Rating> rating =
+        ModalRoute.of(context)!.settings.arguments as List<Rating>;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xffE4C9E5),
@@ -48,14 +20,14 @@ class RatingZadyFromVolunteersPage extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView.builder(
-          itemCount: ratings.length,
+          itemCount: rating.length,
           itemBuilder: (context, index) {
-            final rating = ratings[index];
+            final ratings = rating[index];
             return Card(
               margin: const EdgeInsets.only(bottom: 16),
               child: ListTile(
                 title: Text(
-                  rating.volunteerName,
+                  ratings.volunteerName,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
@@ -63,9 +35,9 @@ class RatingZadyFromVolunteersPage extends StatelessWidget {
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Rating: ${rating.rating}/5'),
+                    Text('Rating: ${ratings.rating}/5'),
                     SizedBox(height: 8),
-                    Text(rating.comment),
+                    Text(ratings.comment),
                   ],
                 ),
               ),

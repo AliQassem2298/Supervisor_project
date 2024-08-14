@@ -1,20 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:project_2tamayoz/features/authentications/screens/widgets/add_book_page.dart';
 import 'package:project_2tamayoz/features/authentications/screens/widgets/add_zady_session_page.dart';
-
-class Book {
-  final String title;
-  final String author;
-  final String date;
-  final String imagePath;
-
-  Book({
-    required this.title,
-    required this.author,
-    required this.date,
-    required this.imagePath,
-  });
-}
+import 'package:project_2tamayoz/models/add_book_model.dart';
+import 'package:project_2tamayoz/models/get_books_model.dart';
+import 'package:project_2tamayoz/services/get_books_service.dart';
 
 class ViewBooksPage extends StatefulWidget {
   const ViewBooksPage({super.key});
@@ -25,20 +17,6 @@ class ViewBooksPage extends StatefulWidget {
 
 class _ViewBooksPageState extends State<ViewBooksPage> {
   // Sample list of books
-  final List<Book> books = [
-    Book(
-      title: "Book 1",
-      author: "Author 1",
-      date: "2024-08-10",
-      imagePath: "assets/images/download33.jpeg",
-    ),
-    Book(
-      title: "Book 2",
-      author: "Author 2",
-      date: "2023-07-15",
-      imagePath: "assets/images/download33.jpeg",
-    ),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -53,40 +31,72 @@ class _ViewBooksPageState extends State<ViewBooksPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: ListView.builder(
-          itemCount: books.length,
-          itemBuilder: (context, index) {
-            final book = books[index];
-            return Card(
-              margin: const EdgeInsets.symmetric(vertical: 8.0),
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => AddZadySessionPage()),
+        child: FutureBuilder<GetBooksModel>(
+          future: GetBooksService().getBooks(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text(snapshot.error.toString()),
+              );
+            } else if (!snapshot.hasData || snapshot.data!.data.isEmpty) {
+              return const Center(
+                child: Text('There Is No Books.'),
+              );
+            } else {
+              GetBooksModel getBooksModel = snapshot.data!;
+              return ListView.builder(
+                itemCount: getBooksModel.data.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    margin: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: InkWell(
+                        onTap: () {
+                          Get.to(
+                            () => AddZadySessionPage(),
+                            arguments: getBooksModel.data[index].id,
+                          );
+                        },
+                        child: ListTile(
+                          leading: getBooksModel
+                                  .data[index].imageName.isNotEmpty
+                              ? getBooksModel.data[index].imageName
+                                      .startsWith('http')
+                                  ? Image.network(
+                                      getBooksModel.data[index].imageName,
+                                      width: 50,
+                                      height: 50,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.file(
+                                      File(getBooksModel.data[index].imageName),
+                                      width: 50,
+                                      height: 50,
+                                      fit: BoxFit.cover,
+                                    )
+                              : Icon(Icons.book,
+                                  size: 50), // Default icon if no image
+                          title: Text('${getBooksModel.data[index].title}'),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                  'Author: ${getBooksModel.data[index].author}'),
+                              Text(
+                                'Date: ${getBooksModel.data[index].createdAt}',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        )),
                   );
                 },
-                child: ListTile(
-                  leading: book.imagePath.isNotEmpty
-                      ? Image.asset(
-                          book.imagePath,
-                          width: 50,
-                          height: 50,
-                          fit: BoxFit.cover,
-                        )
-                      : Icon(Icons.book, size: 50), // Default icon if no image
-                  title: Text(book.title),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Author: ${book.author}'),
-                      Text('Date: ${book.date}'),
-                    ],
-                  ),
-                ),
-              ),
-            );
+              );
+            }
           },
         ),
       ),
@@ -94,7 +104,11 @@ class _ViewBooksPageState extends State<ViewBooksPage> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => AddBookPage()),
+            MaterialPageRoute(
+              builder: (context) => AddBookPage(onBookAdded: () {
+                setState(() {});
+              }),
+            ),
           );
         },
         tooltip: 'Add Book',

@@ -6,8 +6,8 @@ class AddZadySessionService {
   Future<AddZadySessionModel> addZadySession({
     required int bookId,
     required String sessionDate,
-    required int duration,
-    required int sessionHours,
+    required String duration,
+    required String sessionHours,
   }) async {
     Map<String, dynamic> data = await Api().post(
       url: '$baseUrl/addZadiSession',
