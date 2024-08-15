@@ -5,8 +5,8 @@ import 'package:project_2tamayoz/features/authentications/screens/widgets/view_b
 import 'package:project_2tamayoz/features/authentications/screens/widgets/view_zady_session_page.dart';
 import 'package:project_2tamayoz/main.dart';
 import 'package:project_2tamayoz/models/get_groub_id_model.dart';
-import 'package:project_2tamayoz/services/add_activity_service.dart';
 import 'package:project_2tamayoz/services/get_groub_id_service.dart';
+import 'package:project_2tamayoz/services/notifications_service.dart';
 import 'leaderprofilepage.dart';
 import 'members_screen.dart';
 import 'activity_list_screen.dart';
@@ -150,6 +150,7 @@ class _GroupListScreenState extends State<GroupListScreen> {
                     //     },
                     //   ],
                     // );
+                    await NotificationsService().notifications();
                   },
                   icon: const Icon(Icons.local_convenience_store),
                 ),
