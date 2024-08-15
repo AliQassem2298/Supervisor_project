@@ -5,9 +5,7 @@ import 'package:project_2tamayoz/features/authentications/screens/widgets/view_b
 import 'package:project_2tamayoz/features/authentications/screens/widgets/view_zady_session_page.dart';
 import 'package:project_2tamayoz/main.dart';
 import 'package:project_2tamayoz/models/get_groub_id_model.dart';
-import 'package:project_2tamayoz/services/add_zady_session_service.dart';
-import 'package:project_2tamayoz/services/all_volunteers_service.dart';
-import 'package:project_2tamayoz/services/get_books_service.dart';
+import 'package:project_2tamayoz/services/add_activity_service.dart';
 import 'package:project_2tamayoz/services/get_groub_id_service.dart';
 import 'leaderprofilepage.dart';
 import 'members_screen.dart';
@@ -138,7 +136,21 @@ class _GroupListScreenState extends State<GroupListScreen> {
                   icon: const Icon(Icons.heart_broken),
                 ),
                 IconButton(
-                  onPressed: () async {},
+                  onPressed: () async {
+                    // await AddActivityService().addActivity(
+                    //   name: "ahmed mohsen",
+                    //   description: "beo beoooo",
+                    //   startTime: "2024-08-20 10:00:00",
+                    //   endTime: "2024-08-20 12:00:00",
+                    //   volunteers: [
+                    //     {
+                    //       'id': 1,
+                    //       'first_name': 'asd',
+                    //       'last_name': 'asd',
+                    //     },
+                    //   ],
+                    // );
+                  },
                   icon: const Icon(Icons.local_convenience_store),
                 ),
               ],

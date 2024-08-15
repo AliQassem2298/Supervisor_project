@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project_2tamayoz/features/authentications/screens/widgets/add_book_page.dart';
 import 'package:project_2tamayoz/features/authentications/screens/widgets/add_zady_session_page.dart';
-import 'package:project_2tamayoz/models/add_book_model.dart';
 import 'package:project_2tamayoz/models/get_books_model.dart';
 import 'package:project_2tamayoz/services/get_books_service.dart';
 
