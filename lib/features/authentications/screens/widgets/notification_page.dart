@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:project_2tamayoz/models/notifications_model.dart';
 import 'package:project_2tamayoz/services/notifications_service.dart';
 
@@ -105,56 +106,79 @@ class NotificationPage extends StatefulWidget {
 class _NotificationPageState extends State<NotificationPage> {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<NotificationsModel>(
-      future: NotificationsService().notifications(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (snapshot.hasError) {
-          return Center(
-            child: Text(snapshot.error.toString()),
-          );
-        } else if (!snapshot.hasData || snapshot.data!.data.isEmpty) {
-          return const Center(
-            child: Text('No notifications available.'),
-          );
-        } else {
-          NotificationsModel notificationsModel = snapshot.data!;
-          return ListView.builder(
-            itemCount: notificationsModel.data.length,
-            itemBuilder: (context, index) {
-              NotificationData notification = notificationsModel.data[index];
-              return Card(
-                child: ListTile(
-                  title: RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: notification.text, // Accessing the 'text' field
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Notifications'),
+        backgroundColor: Color(0xffE4C9E5),
+        elevation: 0,
+        centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.black),
+        titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
+        // actions: [
+        //   IconButton(
+        //     icon: Icon(Icons.settings, color: Colors.white),
+        //     onPressed: () {
+        //       // Handle settings button press
+        //     },
+        //   ),
+        // ],
+      ),
+      body: FutureBuilder<NotificationsModel>(
+        future: NotificationsService().notifications(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text(snapshot.error.toString()),
+            );
+          } else if (!snapshot.hasData || snapshot.data!.data.isEmpty) {
+            return const Center(
+              child: Text('No notifications available.'),
+            );
+          } else {
+            NotificationsModel notificationsModel = snapshot.data!;
+            return ListView.builder(
+              itemCount: notificationsModel.data.length,
+              itemBuilder: (context, index) {
+                NotificationData notification = notificationsModel.data[index];
+                return Card(
+                  child: ListTile(
+                    title: RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text:
+                                notification.text, // Accessing the 'text' field
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
                           ),
-                        ),
-                        const TextSpan(
-                          text: ' - ',
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        TextSpan(
-                          text: notification.type, // Accessing the 'type' field
-                          style: const TextStyle(color: Colors.black),
-                        ),
-                      ],
+                          const TextSpan(
+                            text: ' - ',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          TextSpan(
+                            text:
+                                notification.type, // Accessing the 'type' field
+                            style: const TextStyle(color: Colors.black),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              );
-            },
-          );
-        }
-      },
+                ).paddingSymmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                );
+              },
+            );
+          }
+        },
+      ),
     );
   }
 }
